@@ -1,16 +1,15 @@
-from keras import backend as K
-from keras.models import Model
-from keras.layers import Input, Activation, Dropout, Flatten, Dense, Reshape, BatchNormalization
-from keras.layers import Convolution2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMaxPooling2D, Conv2D
-from keras import initializers, regularizers, constraints
-from keras.utils import conv_utils
-from keras.utils.data_utils import get_file
-from keras.engine.topology import get_source_inputs
-from keras.engine import InputSpec
-from keras.applications import imagenet_utils
-from keras_applications.imagenet_utils import decode_predictions, _obtain_input_shape
-from keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
-import keras
+import tensorflow.keras.backend as K
+from tensorflow.keras import Model
+from tensorflow.keras.layers import Input, Activation, Dropout, Flatten, Dense, Reshape, BatchNormalization
+from tensorflow.keras.layers import Convolution2D, MaxPooling2D, GlobalAveragePooling2D, GlobalMaxPooling2D, Conv2D
+from tensorflow.keras import initializers, regularizers, constraints
+from tensorflow.keras.utils import get_file
+#from tensorflow.keras.engine.topology import get_source_inputs
+from tensorflow.keras.layers import InputSpec
+#from tensorflow.keras.applications import imagenet_utils
+#from tensorflow.keras_applications.imagenet_utils import decode_predictions, _obtain_input_shape
+from tensorflow.keras.callbacks import TensorBoard, EarlyStopping, ModelCheckpoint
+import tensorflow.keras
 
 import numpy as np
 
@@ -125,6 +124,38 @@ class DepthwiseConv2D(Conv2D):
 
         return outputs
 
+    def conv_output_length(
+        self,
+        input_length,
+        filter_size,
+        padding,
+        stride,
+        dilation=1
+    ):
+        """Determines output length of a convolution given input length.
+
+          Arguments:
+              input_length: integer.
+              filter_size: integer.
+              padding: one of "same", "valid", "full", "causal"
+              stride: integer.
+              dilation: dilation rate, integer.
+
+          Returns:
+              The output length (integer).
+        """
+        if input_length is None:
+            return None
+        assert padding in {'same', 'valid', 'full', 'causal'}
+        dilated_filter_size = filter_size + (filter_size - 1) * (dilation - 1)
+        if padding in ['same', 'causal']:
+            output_length = input_length
+        elif padding == 'valid':
+            output_length = input_length - dilated_filter_size + 1
+        elif padding == 'full':
+            output_length = input_length + dilated_filter_size - 1
+        return (output_length + stride - 1) // stride
+
     def compute_output_shape(self, input_shape):
         if self.data_format == 'channels_first':
             rows = input_shape[2]
@@ -135,10 +166,10 @@ class DepthwiseConv2D(Conv2D):
             cols = input_shape[2]
             out_filters = input_shape[3] * self.depth_multiplier
 
-        rows = conv_utils.conv_output_length(rows, self.kernel_size[0],
-                                             self.padding, self.strides[0])
-        cols = conv_utils.conv_output_length(cols, self.kernel_size[1],
-                                             self.padding, self.strides[1])
+        rows = conv_output_length(
+            rows, self.kernel_size[0], self.padding, self.strides[0])
+        cols = conv_output_length(
+            cols, self.kernel_size[1], self.padding, self.strides[1])
 
         if self.data_format == 'channels_first':
             return (input_shape[0], out_filters, rows, cols)
@@ -159,7 +190,7 @@ class DepthwiseConv2D(Conv2D):
         config['depthwise_constraint'] = constraints.serialize(
             self.depthwise_constraint)
         return config
-        
+
 # Tracker
 import cv2
 import os
@@ -170,7 +201,7 @@ class BboxTracker():
         self.args = args
         # self.tracker = cv2.TrackerMedianFlow_create()
         self.tracker = cv2.TrackerKCF_create()
-    
+
     def xyxy2xywh(self, bbox_xyxy):
         x = bbox_xyxy[0][0]
         y = bbox_xyxy[0][1]
@@ -191,7 +222,7 @@ class BboxTracker():
         # self.tracker = cv2.TrackerMedianFlow_create()
         ok = self.tracker.init(img, bbox_xywh)
         return ok
-    
+
     def updateBbox(self, img):
         ok, bbox_xywh = self.tracker.update(img)
         if ok:
@@ -201,7 +232,7 @@ class BboxTracker():
 
 # import the necessary packages
 import datetime
- 
+
 class FPS:
 	def __init__(self):
 		# store the start time, end time, and total number of frames
@@ -209,26 +240,26 @@ class FPS:
 		self._start = None
 		self._end = None
 		self._numFrames = 0
- 
+
 	def start(self):
 		# start the timer
 		self._start = datetime.datetime.now()
 		return self
- 
+
 	def stop(self):
 		# stop the timer
 		self._end = datetime.datetime.now()
- 
+
 	def update(self):
 		# increment the total number of frames examined during the
 		# start and end intervals
 		self._numFrames += 1
- 
+
 	def elapsed(self):
 		# return the total number of seconds between the start and
 		# end interval
 		return (self._end - self._start).total_seconds()
- 
+
 	def fps(self):
 		# compute the (approximate) frames per second
 		return self._numFrames / self.elapsed()
