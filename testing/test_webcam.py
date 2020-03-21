@@ -70,8 +70,8 @@ def webcam_main():
 
 if __name__ == "__main__":
 #    current_model = "../model/facial_landmark_cnn.h5"
-    current_model = "../model/facial_landmark_SqueezeNet.pb"
-    VIDEO_PATH = "../data/vid.avi"
+    current_model = "/data/face_landmark_factory/model/facial_landmark_SqueezeNet.pb"
+    VIDEO_PATH = "/data/face_landmark_factory/data/vid.avi"
 #    VIDEO_PATH = 0
     CNN_INPUT_SIZE = 64
     webcam_main()

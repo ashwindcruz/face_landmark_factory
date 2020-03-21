@@ -32,8 +32,8 @@ class MarkDetector:
 
             self.graph = detection_graph
             self.sess = tf.Session(graph=detection_graph)
-            
-        
+
+
         else:
             self.cnn_input_size = cnn_input_size
             # with CustomObjectScope({'tf': tf}):
@@ -49,7 +49,7 @@ class MarkDetector:
         predictions = self.sess.run(
             output_name,
             feed_dict={input_name: image_np})
-            
+
         # Convert predictions to landmarks
         marks = np.array(predictions).flatten()
         marks = np.reshape(marks, (-1, 2))
@@ -59,7 +59,7 @@ class MarkDetector:
     def detect_marks_keras(self, image_np):
         """Detect marks from image"""
         predictions = self.sess.predict_on_batch(image_np)
-            
+
         # Convert predictions to landmarks.
         marks = np.array(predictions).flatten()
         marks = np.reshape(marks, (-1, 2))
@@ -91,7 +91,7 @@ class MarkDetector:
         right_x = box[2]
         bottom_y = box[3]
 
-        box_width = right_x - left_x 
+        box_width = right_x - left_x
         box_height = bottom_y - top_y
 
         # Check if box is already a square. If not, make it a square.
@@ -150,8 +150,8 @@ class FaceDetector:
     """Detect human face from image"""
 
     def __init__(self,
-                 dnn_proto_text='../assets/deploy.prototxt',
-                 dnn_model='../assets/res10_300x300_ssd_iter_140000.caffemodel'):
+                 dnn_proto_text='/data/face_landmark_factory/assets/deploy.prototxt',
+                 dnn_model='/data/face_landmark_factory/assets/res10_300x300_ssd_iter_140000.caffemodel'):
         """Initialization"""
         self.face_net = cv2.dnn.readNetFromCaffe(dnn_proto_text, dnn_model)
         self.detection_result = None
