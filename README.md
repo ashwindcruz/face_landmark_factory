@@ -14,3 +14,9 @@ The required packages are listed in `requirements.txt`. I recommend installing t
 1. In `test_capture.py`, the `screen_region` variable in `webcam_main` controls where the screen looks at. Feel free to edit this to suit your needs.
 2. To quite the program, you can either stop it running from the terminal or press the display box and press q. If you press the 'x' button on the display box, it will just come back.
 
+### Running
+When you are ready, you can run the program via:
+```python
+python3 testing/test_capture.py
+```
+
