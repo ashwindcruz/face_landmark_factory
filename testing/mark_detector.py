@@ -123,6 +123,19 @@ class MarkDetector:
         cols = image.shape[1]
         return box[0] >= 0 and box[1] >= 0 and box[2] <= cols and box[3] <= rows
 
+    @staticmethod
+    def clip_box_to_image(box, image):
+        """Clip the box to be within the image"""
+        rows = image.shape[0]
+        cols = image.shape[1]
+
+        box[0] = max(box[0], 0)
+        box[1] = max(box[1], 0)
+        box[2] = min(box[2], cols)
+        box[3] = min(box[3], rows)
+
+        return box
+
     def extract_cnn_facebox(self, image):
         """Extract face area from image."""
         _, raw_boxes = self.face_detector.get_faceboxes(image=image, threshold=0.5)
@@ -135,8 +148,11 @@ class MarkDetector:
             # Make box square.
             facebox = self.get_square_box(box_moved)
 
-            if self.box_in_image(facebox, image):
-                faceboxes.append(facebox)
+            # Ensure that the box fits within the image
+            facebox = self.clip_box_to_image(facebox)
+
+            faceboxes.append(facebox)
+
         return faceboxes
 
     @staticmethod
