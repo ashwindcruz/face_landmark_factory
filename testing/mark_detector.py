@@ -149,7 +149,7 @@ class MarkDetector:
             facebox = self.get_square_box(box_moved)
 
             # Ensure that the box fits within the image
-            facebox = self.clip_box_to_image(facebox)
+            facebox = self.clip_box_to_image(facebox, image)
 
             faceboxes.append(facebox)
 
