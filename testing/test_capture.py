@@ -1,14 +1,16 @@
+import os
+import shutil
 import sys
+import time
+
 sys.path.append("C:/Users/Ashwin/Documents/Projects/face_landmark_factory/")
 
-from multiprocessing import Process, Queue
-import numpy as np
 import cv2
-from testing.mark_detector import MarkDetector
-import time
-import os
 from mss import mss
-from PIL import Image
+import numpy as np
+
+from testing.mark_detector import MarkDetector
+
 
 def webcam_main():
     print("Camera sensor warming up...")
