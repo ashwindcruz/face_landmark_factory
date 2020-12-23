@@ -52,7 +52,7 @@ def webcam_main():
         width_coord = wh_coordinates[i]
         face_mask[height_coord, width_coord, :] = 1
 
-        if counter % 30000 == 0 or i == len(shuffled_coordinates)-1:
+        if counter % 30000 == 0 or counter == len(shuffled_coordinates)-1:
             frame = full_face.copy()
             frame *= face_mask
 
