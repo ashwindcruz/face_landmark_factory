@@ -9,7 +9,7 @@ The required packages are listed in `requirements.txt`. I recommend installing t
 
 ### Added functionality
 Beyond what the original repo could initially do, this fork has added the following functionality:
-* Run a detector continously on fixed location of your screen and then display any detected boxes and landmarks within a separate window.
+* Run a detector continously on fixed location of your screen while displaying any detected boxes and landmarks within a separate window.
 * Slowly fade in pixels of an image to investigate when the critical number of pixels have appeared such that a detection is triggered.
 
 ### Continous Detector
