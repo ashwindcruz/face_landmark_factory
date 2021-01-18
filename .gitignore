@@ -83,7 +83,7 @@ celerybeat-schedule
 
 # Environments
 #.env
-#.venv
+.venv
 #env/
 #venv/
 #ENV/
@@ -93,6 +93,9 @@ celerybeat-schedule
 # Spyder project settings
 .spyderproject
 .spyproject
+
+# Pycharm project settings
+.idea
 
 # Rope project settings
 .ropeproject
